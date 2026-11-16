@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Règlement Pôle Légal | Portail Officiel GTA RP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        rp: {
+                            bg: '#090d16',
+                            card: '#111827',
+                            cardHover: '#1a2333',
+                            border: '#1f2937',
+                            gold: '#f59e0b',
+                            goldLight: '#fbbf24',
+                            blue: '#3b82f6',
+                            blueDark: '#1d4ed8',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Personnalisation de la barre de défilement */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gold-glow {
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.12);
+        }
+        .blue-glow {
+            box-shadow: 0 0 25px rgba(59, 130, 246, 0.15);
+        }
+        .highlight-search {
+            background-color: rgba(245, 158, 11, 0.35);
+            color: #fef3c7;
+            padding: 0 2px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="bg-rp-bg text-gray-200 font-sans antialiased selection:bg-amber-500/30 selection:text-amber-200">
+
+    <!-- Notification Toast (Remplace alert()) -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Barre de progression de lecture en haut -->
+    <div class="fixed top-0 left-0 right-0 h-1 bg-gray-900 z-50">
+        <div id="reading-progress" class="h-full bg-gradient-to-r from-blue-500 via-amber-400 to-amber-500 w-0 transition-all duration-150"></div>
+    </div>
+
+    <!-- En-tête Mobile -->
+    <header class="lg:hidden fixed top-1 left-0 right-0 z-40 glass-panel border-b border-gray-800 px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center text-gray-950 font-bold shadow-lg">
+                <i class="fa-solid fa-scale-balanced"></i>
+            </div>
+            <div>
+                <span class="font-bold text-white text-sm block leading-tight">PÔLE LÉGAL</span>
+                <span class="text-[11px] text-amber-400 font-medium">Règlement Officiel RP</span>
+            </div>
+        </div>
+        <button id="mobile-menu-btn" class="p-2.5 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-200 transition">
+            <i class="fa-solid fa-bars text-lg"></i>
+        </button>
+    </header>
+
+    <!-- Overlay Mobile -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/70 z-40 hidden lg:hidden backdrop-blur-sm"></div>
+
+    <!-- Barre Latérale de Navigation (Sidebar) -->
+    <aside id="sidebar" class="fixed top-0 left-0 bottom-0 w-72 bg-[#0c111d] border-r border-gray-800/80 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 flex flex-col">
+        <!-- Logo & Titre -->
+        <div class="p-6 border-b border-gray-800/80">
+            <div class="flex items-center gap-3.5">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center text-gray-950 text-xl font-extrabold shadow-lg shadow-amber-500/20">
+                    <i class="fa-solid fa-landmark"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-white tracking-wide text-base">PÔLE LÉGAL</h1>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span class="text-xs text-gray-400 font-medium">Économie Semi-Réaliste</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu de Navigation -->
+        <nav class="flex-1 overflow-y-auto px-4 py-5 space-y-1.5" id="nav-links">
+            <p class="px-3 text-[11px] font-bold uppercase tracking-wider text-gray-500 mb-2">Documentation</p>
+            
+            <a href="#chapitre-1" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-800/70 hover:text-white transition group active-nav">
+                <span class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center group-hover:bg-blue-500 group-hover:text-white transition">
+                    <i class="fa-solid fa-users-gear text-xs"></i>
+                </span>
+                <span>1. Accès & Effectifs</span>
+            </a>
+
+            <a href="#chapitre-2" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-800/70 hover:text-white transition group">
+                <span class="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-gray-950 transition">
+                    <i class="fa-solid fa-coins text-xs"></i>
+                </span>
+                <span>2. Économie & Fiscalité</span>
+            </a>
+
+            <a href="#chapitre-3" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-800/70 hover:text-white transition group">
+                <span class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-gray-950 transition">
+                    <i class="fa-solid fa-gavel text-xs"></i>
+                </span>
+                <span>3. Rachats & Enchères</span>
+            </a>
+
+            <a href="#chapitre-4" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-800/70 hover:text-white transition group">
+                <span class="w-7 h-7 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center group-hover:bg-purple-500 group-hover:text-white transition">
+                    <i class="fa-solid fa-briefcase text-xs"></i>
+                </span>
+                <span>4. Règles par Métier</span>
+            </a>
+
+            <a href="#chapitre-5" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-300 hover:bg-gray-800/70 hover:text-white transition group">
+                <span class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center group-hover:bg-rose-500 group-hover:text-white transition">
+                    <i class="fa-solid fa-shield-halved text-xs"></i>
+                </span>
+                <span>5. Déontologie & Sanctions</span>
+            </a>
+        </nav>
+
+        <!-- Pied de Sidebar -->
+        <div class="p-4 border-t border-gray-800/80 bg-gray-900/40">
+            <div class="flex items-center justify-between text-xs text-gray-400 mb-1.5">
+                <span>Progression lecture</span>
+                <span id="sidebar-progress-text" class="font-bold text-amber-400">0%</span>
+            </div>
+            <div class="w-full h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                <div id="sidebar-progress-bar" class="h-full bg-amber-400 w-0 transition-all duration-150"></div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Contenu Principal -->
+    <main class="lg:pl-72 pt-16 lg:pt-0 min-h-screen">
+        
+        <!-- Barre supérieure (Recherche + Statut) -->
+        <div class="sticky top-14 lg:top-0 z-30 glass-panel border-b border-gray-800/80 px-4 sm:px-8 py-3.5">
+            <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                <!-- Barre de recherche instantanée -->
+                <div class="relative flex-1 max-w-xl">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                    <input type="text" id="search-input" placeholder="Rechercher une règle, une taxe, un métier (ex: LSPD, 50%, garage, enchères...)" 
+                           class="w-full bg-gray-900/90 border border-gray-700/80 focus:border-amber-500 rounded-xl pl-10 pr-20 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-amber-500/20 transition">
+                    <button id="clear-search" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 hover:text-white bg-gray-800 px-2 py-0.5 rounded">
+                        Effacer
+                    </button>
+                </div>
+
+                <!-- Badge Info -->
+                <div class="flex items-center justify-between sm:justify-end gap-3 text-xs">
+                    <span id="search-count" class="hidden text-amber-400 font-medium"></span>
+                    <span class="px-3 py-1.5 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 font-semibold flex items-center gap-1.5">
+                        <i class="fa-solid fa-server"></i> FiveM RP • v2.4
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conteneur des Sections -->
+        <div id="content-wrapper" class="max-w-5xl mx-auto px-4 sm:px-8 py-8 sm:py-12 space-y-16">
+
+            <!-- HERO BANNER -->
+            <section class="relative rounded-3xl overflow-hidden bg-gradient-to-br from-gray-900 via-[#11192c] to-gray-900 border border-gray-800 p-6 sm:p-10 gold-glow">
+                <div class="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute bottom-0 left-0 -mb-10 -ml-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="relative z-10">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-semibold mb-4">
+                        <i class="fa-solid fa-crown"></i> Charte Officielle des Entreprises & Services Publics
+                    </div>
+                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-4">
+                        Règlement du <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-amber-200">Pôle Légal</span>
+                    </h1>
+                    <p class="text-gray-300 text-base sm:text-lg max-w-3xl leading-relaxed mb-6">
+                        Ce portail encadre l'ensemble de la vie économique, juridique et institutionnelle du serveur. L'économie est calibrée sur un modèle <strong class="text-white">semi-réaliste</strong> garantissant l'équilibre entre l'État, les services publics et les entrepreneurs privés.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="#chapitre-2" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold text-sm transition flex items-center gap-2 shadow-lg shadow-amber-500/20">
+                            <i class="fa-solid fa-calculator"></i> Simulateur de Taxes & Rachats
+                        </a>
+                        <a href="#chapitre-1" class="px-5 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 font-semibold text-sm transition flex items-center gap-2">
+                            <i class="fa-solid fa-users text-blue-400"></i> Voir les Effectifs Minimums
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================== -->
+            <!-- CHAPITRE 1 : ACCÈS, ÂGE & EFFECTIFS MINIMUMS                         -->
+            <!-- ===================================================================== -->
+            <section id="chapitre-1" class="rule-section scroll-mt-24 space-y-6">
+                <div class="flex items-center gap-3 border-b border-gray-800 pb-4">
+                    <span class="w-10 h-10 rounded-xl bg-blue-500/15 border border-blue-500/30 text-blue-400 flex items-center justify-center font-bold text-lg">1</span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Accès au Pôle Légal & Reprises</h2>
+                        <p class="text-sm text-gray-400">Conditions d'âge HRP, effectifs minimums obligatoires et règles RH</p>
+                    </div>
+                </div>
+
+                <!-- Cartes Prérequis HRP -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-5">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center mb-3">
+                            <i class="fa-solid fa-id-card text-lg"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base mb-1">Âge Minimum Requis</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            <strong class="text-amber-400">17 ans révolus</strong> pour diriger une entreprise ou un service public. Dérogation possible dès <strong class="text-white">16 ans</strong> uniquement si grande maturité prouvée et dossier exemplaire.
+                        </p>
+                    </div>
+
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-5">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center mb-3">
+                            <i class="fa-solid fa-user-tie text-lg"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base mb-1">Cumul & Liens Illégaux</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Cumul <strong class="text-rose-400">interdit</strong> entre service public et entreprise privée. Un patron légal ne peut pas être chef de gang/orga ni utiliser ses fonds pros pour l'illégal.
+                        </p>
+                    </div>
+
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-5">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mb-3">
+                            <i class="fa-solid fa-user-check text-lg"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base mb-1">Maintien des Effectifs</h3>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            L'effectif minimum (patron inclus) est exigé au dépôt du dossier. En cas de baisse sous le seuil, délai de <strong class="text-emerald-400">7 jours</strong> pour recruter avant mise sous tutelle.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Tableau des Effectifs Minimums -->
+                <div class="bg-rp-card border border-gray-800 rounded-2xl overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-800 flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-gray-900/50">
+                        <h3 class="font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-users text-blue-400"></i> Effectifs Minimums Obligatoires par Secteur
+                        </h3>
+                        <span class="text-xs text-gray-400">Patron / Directeur inclus dans le décompte</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="border-b border-gray-800 text-xs uppercase tracking-wider text-gray-400 bg-gray-900/30">
+                                    <th class="py-3.5 px-6">Catégorie</th>
+                                    <th class="py-3.5 px-6">Structure / Entreprise</th>
+                                    <th class="py-3.5 px-6 text-right">Effectif Minimum</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-800/70 text-sm">
+                                <tr class="hover:bg-gray-800/30 transition">
+                                    <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-500/15 text-blue-400">Service Public</span></td>
+                                    <td class="py-3.5 px-6 font-medium text-white">LSPD, BCSO, SAMS, Secret Service <span class="text-gray-400 text-xs">(Hors DOJ)</span></td>
+                                    <td class="py-3.5 px-6 text-right"><span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 font-bold">6 personnes min.</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-800/30 transition">
+                                    <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-500/15 text-blue-400">Service Public</span></td>
+                                    <td class="py-3.5 px-6 font-medium text-white">DOJ (Département de la Justice)</td>
+                                    <td class="py-3.5 px-6 text-right"><span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 font-bold">2 personnes min.</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-800/30 transition">
+                                    <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-purple-500/15 text-purple-400">Service Privé</span></td>
+                                    <td class="py-3.5 px-6 font-medium text-white">Restauration & Boîtes de nuit</td>
+                                    <td class="py-3.5 px-6 text-right"><span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 font-bold">5 personnes min.</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-800/30 transition">
+                                    <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-purple-500/15 text-purple-400">Service Privé</span></td>
+                                    <td class="py-3.5 px-6 font-medium text-white">Garage / Mécanique</td>
+                                    <td class="py-3.5 px-6 text-right"><span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 font-bold">3 personnes min.</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-800/30 transition">
+                                    <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-purple-500/15 text-purple-400">Service Privé</span></td>
+                                    <td class="py-3.5 px-6 font-medium text-white">Entreprise de RUN (Farm)</td>
+                                    <td class="py-3.5 px-6 text-right"><span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 font-bold">2 personnes min.</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-800/30 transition">
+                                    <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/15 text-emerald-400">Indépendant</span></td>
+                                    <td class="py-3.5 px-6 font-medium text-white">Weazel News</td>
+                                    <td class="py-3.5 px-6 text-right"><span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 font-bold">4 personnes min.</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-800/30 transition">
+                                    <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/15 text-emerald-400">Indépendant</span></td>
+                                    <td class="py-3.5 px-6 font-medium text-white">Dynasty 8 (Agence Immobilière)</td>
+                                    <td class="py-3.5 px-6 text-right"><span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 font-bold">3 personnes min.</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-800/30 transition">
+                                    <td class="py-3.5 px-6"><span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-500/15 text-emerald-400">Indépendant</span></td>
+                                    <td class="py-3.5 px-6 font-medium text-white">Cabinet d'Avocats</td>
+                                    <td class="py-3.5 px-6 text-right"><span class="px-3 py-1 rounded-full bg-amber-500/15 text-amber-400 font-bold">2 personnes min.</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================== -->
+            <!-- CHAPITRE 2 : ÉCONOMIE SEMI-RÉALISTE & FISCALITÉ                       -->
+            <!-- ===================================================================== -->
+            <section id="chapitre-2" class="rule-section scroll-mt-24 space-y-6">
+                <div class="flex items-center gap-3 border-b border-gray-800 pb-4">
+                    <span class="w-10 h-10 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center font-bold text-lg">2</span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Organisation Économique & Fiscalité</h2>
+                        <p class="text-sm text-gray-400">Budgets des services publics, barèmes d'imposition et simulateur de taxes</p>
+                    </div>
+                </div>
+
+                <!-- 2.1 Budgets Services Publics -->
+                <div class="bg-rp-card border border-gray-800 rounded-2xl p-6 space-y-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-building-shield text-blue-400"></i> 2.1. Enveloppes Budgétaires des Services Publics
+                        </h3>
+                        <span class="text-xs px-2.5 py-1 rounded-lg bg-gray-800 text-gray-300">Plafond Max / Seuil Min</span>
+                    </div>
+                    <p class="text-sm text-gray-400">
+                        Les comptes des services publics sont encadrés par le Trésor Public. Tout surplus au-delà du plafond maximum est reversé à l'État ; en dessous du seuil minimum, l'État verse une subvention.
+                    </p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <!-- LSPD / BCSO / SAMS -->
+                        <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-white text-sm">LSPD / BCSO / SAMS</span>
+                                <i class="fa-solid fa-shield-halved text-blue-400"></i>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400 mb-1.5">
+                                <span>Min: <strong class="text-emerald-400">45 000 $</strong></span>
+                                <span>Max: <strong class="text-amber-400">250 000 $</strong></span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-800 rounded-full overflow-hidden flex">
+                                <div class="bg-emerald-500 h-full" style="width: 18%" title="Seuil minimum 45 000$"></div>
+                                <div class="bg-blue-500 h-full" style="width: 82%" title="Marge de fonctionnement jusqu'à 250 000$"></div>
+                            </div>
+                        </div>
+
+                        <!-- Secret Service -->
+                        <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-white text-sm">Secret Service</span>
+                                <i class="fa-solid fa-user-secret text-purple-400"></i>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400 mb-1.5">
+                                <span>Min: <strong class="text-emerald-400">60 000 $</strong></span>
+                                <span>Max: <strong class="text-amber-400">225 000 $</strong></span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-800 rounded-full overflow-hidden flex">
+                                <div class="bg-emerald-500 h-full" style="width: 26.6%"></div>
+                                <div class="bg-purple-500 h-full" style="width: 73.4%"></div>
+                            </div>
+                        </div>
+
+                        <!-- DOJ -->
+                        <div class="bg-gray-900/70 border border-gray-800 rounded-xl p-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="font-bold text-white text-sm">DOJ (Justice)</span>
+                                <i class="fa-solid fa-scale-balanced text-amber-400"></i>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-400 mb-1.5">
+                                <span>Min: <strong class="text-emerald-400">100 000 $</strong></span>
+                                <span>Max: <strong class="text-amber-400">200 000 $</strong></span>
+                            </div>
+                            <div class="w-full h-2.5 bg-gray-800 rounded-full overflow-hidden flex">
+                                <div class="bg-emerald-500 h-full" style="width: 50%"></div>
+                                <div class="bg-amber-500 h-full" style="width: 50%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2.2 Barèmes d'Imposition des Services Privés -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+                    <!-- Garages -->
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2.5 mb-4">
+                                <div class="w-9 h-9 rounded-lg bg-blue-500/15 text-blue-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-wrench"></i>
+                                </div>
+                                <h4 class="font-bold text-white text-base">Garages</h4>
+                            </div>
+                            <ul class="space-y-2.5 text-sm">
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">0 $ à 1 000 000 $</span>
+                                    <span class="font-bold text-emerald-400">10 %</span>
+                                </li>
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">1M $ à 2 000 000 $</span>
+                                    <span class="font-bold text-amber-400">20 %</span>
+                                </li>
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">2M $ à 2 500 000 $</span>
+                                    <span class="font-bold text-orange-400">25 %</span>
+                                </li>
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">2,5M $ à 3 200 000 $</span>
+                                    <span class="font-bold text-rose-400">30 %</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Boîte de nuit & Restauration -->
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2.5 mb-4">
+                                <div class="w-9 h-9 rounded-lg bg-purple-500/15 text-purple-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-champagne-glasses"></i>
+                                </div>
+                                <h4 class="font-bold text-white text-base">Boîte de nuit & Restauration</h4>
+                            </div>
+                            <ul class="space-y-2.5 text-sm">
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">0 $ à 1 000 000 $</span>
+                                    <span class="font-bold text-emerald-400">6 %</span>
+                                </li>
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">1M $ à 2 000 000 $</span>
+                                    <span class="font-bold text-amber-400">13 %</span>
+                                </li>
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">2M $ à 2 500 000 $</span>
+                                    <span class="font-bold text-orange-400">21 %</span>
+                                </li>
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">2,5M $ à 3 200 000 $</span>
+                                    <span class="font-bold text-rose-400">27 %</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Entreprise de Farm -->
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-5 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center gap-2.5 mb-4">
+                                <div class="w-9 h-9 rounded-lg bg-amber-500/15 text-amber-400 flex items-center justify-center">
+                                    <i class="fa-solid fa-wheat-awn"></i>
+                                </div>
+                                <h4 class="font-bold text-white text-base">Entreprise de Farm (Run)</h4>
+                            </div>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">0 $ à 1 000 000 $</span>
+                                    <span class="font-bold text-emerald-400">15 %</span>
+                                </li>
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">1M $ à 2 000 000 $</span>
+                                    <span class="font-bold text-amber-400">28 %</span>
+                                </li>
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">2M $ à 2 500 000 $</span>
+                                    <span class="font-bold text-orange-400">36 %</span>
+                                </li>
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">2,5M $ à 3 200 000 $</span>
+                                    <span class="font-bold text-rose-400">45 %</span>
+                                </li>
+                                <li class="flex justify-between items-center p-2 rounded-lg bg-gray-900/60">
+                                    <span class="text-gray-300">3,2M $ à 4 500 000 $</span>
+                                    <span class="font-bold text-red-500">55 %</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulateur d'Impôt Interactif -->
+                <div class="bg-gradient-to-r from-[#111827] to-[#162033] border border-amber-500/30 rounded-2xl p-6 blue-glow">
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500 text-gray-950 flex items-center justify-center font-bold">
+                            <i class="fa-solid fa-calculator"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-lg">Simulateur d'Impôt Hebdomadaire</h3>
+                            <p class="text-xs text-gray-400">Calculez automatiquement la taxe applicable selon votre secteur et votre solde bancaire</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1.5">Secteur d'activité</label>
+                            <select id="tax-sector" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 focus:outline-none">
+                                <option value="garage">Garage (10% - 30%)</option>
+                                <option value="resto">Boîte de nuit / Restauration (6% - 27%)</option>
+                                <option value="farm">Entreprise de Farm / Run (15% - 55%)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1.5">Solde Bancaire Entreprise ($)</label>
+                            <input type="number" id="tax-amount" value="1250000" min="0" max="10000000" step="10000"
+                                   class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-amber-500 focus:outline-none">
+                        </div>
+                        <div class="bg-gray-950/80 border border-gray-800 rounded-xl p-3 flex items-center justify-between">
+                            <div>
+                                <span class="text-xs text-gray-400 block">Taux appliqué : <strong id="tax-rate-display" class="text-amber-400">20%</strong></span>
+                                <span class="text-xs text-gray-400 block">Reste après impôt : <strong id="tax-net-display" class="text-emerald-400">1 000 000 $</strong></span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[11px] text-gray-500 uppercase block">Impôt à payer</span>
+                                <span id="tax-result-display" class="text-lg font-extrabold text-rose-400">250 000 $</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-3 flex items-center gap-1.5">
+                        <i class="fa-solid fa-circle-info text-blue-400"></i>
+                        <span><strong>Règle comptable :</strong> Les primes exceptionnelles versées aux employés/patron sont plafonnées à <strong>25 % du bénéfice net hebdomadaire</strong> avant calcul de l'impôt.</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- ===================================================================== -->
+            <!-- CHAPITRE 3 : RACHATS, MISE EN VENTE & ENCHÈRES                        -->
+            <!-- ===================================================================== -->
+            <section id="chapitre-3" class="rule-section scroll-mt-24 space-y-6">
+                <div class="flex items-center gap-3 border-b border-gray-800 pb-4">
+                    <span class="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-lg">3</span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Rachat, Mise en Vente & Enchères</h2>
+                        <p class="text-sm text-gray-400">Procédures officielles de cession, sécurité anti-sabotage et calculateur de rachat</p>
+                    </div>
+                </div>
+
+                <!-- Alerte Inaliénabilité Services Publics -->
+                <div class="bg-rose-500/10 border border-rose-500/30 rounded-2xl p-5 flex items-start gap-4">
+                    <div class="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+                        <i class="fa-solid fa-ban text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-rose-300 text-base">Règle Absolue : Services Publics Non Rachetables</h3>
+                        <p class="text-sm text-gray-300 mt-1">
+                            <strong>TOUTES LES ENTREPRISES ET INSTITUTIONS PUBLIQUES NE PEUVENT PAS ÊTRE RACHETÉES</strong> (LSPD, BCSO, SAMS, DOJ, Secret Service). Leur direction s'obtient uniquement par dossier de candidature validé par le Gouvernement et le Staff Légal.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3 Étapes / Règles de rachat -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-5 relative overflow-hidden">
+                        <span class="text-4xl font-black text-gray-800/80 absolute top-3 right-4">50%</span>
+                        <h4 class="font-bold text-white text-base mb-2">1. Prix de Rachat Standard</h4>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Le rachat d'une entreprise privée est fixé à <strong class="text-emerald-400">50 % de la somme sur le compte en banque</strong>, calculée strictement <strong class="text-white">APRÈS paiement des salaires</strong> des employés et du patron.
+                        </p>
+                    </div>
+
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-5 relative overflow-hidden">
+                        <span class="text-4xl font-black text-gray-800/80 absolute top-3 right-4">7J</span>
+                        <h4 class="font-bold text-white text-base mb-2">2. Vente Gouvernementale & Sécurité</h4>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Mise en vente à <strong class="text-amber-400">50 %</strong> pendant <strong>1 semaine</strong>. Si les anciens gérants font chuter les comptes de <strong class="text-rose-400">plus de 50 %</strong>, sécurité activée : rachat abaissé à <strong class="text-emerald-400">40 %</strong>. Sans acheteur après 7j : reprise sur dossier.
+                        </p>
+                    </div>
+
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-5 relative overflow-hidden">
+                        <span class="text-4xl font-black text-gray-800/80 absolute top-3 right-4">45%</span>
+                        <h4 class="font-bold text-white text-base mb-2">3. Vente aux Enchères</h4>
+                        <p class="text-sm text-gray-300 leading-relaxed">
+                            Si l'entreprise est convoitée par <strong class="text-blue-400">plus de 2 personnes/groupes</strong> (soit 3 candidats ou plus), elle est mise aux enchères avec un prix de départ fixé à <strong class="text-amber-400">45 % de la somme bancaire</strong>.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Mini-Calculateur de Rachat -->
+                <div class="bg-rp-card border border-gray-800 rounded-2xl p-6">
+                    <h3 class="font-bold text-white text-base mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-hand-holding-dollar text-emerald-400"></i> Calculateur de Rachat & Enchères d'Entreprise
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1.5">Solde Bancaire (Après Salaires) ($)</label>
+                            <input type="number" id="buyout-balance" value="1000000" min="0" step="10000"
+                                   class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase mb-1.5">Situation de la Vente</label>
+                            <select id="buyout-scenario" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:border-emerald-500 focus:outline-none">
+                                <option value="standard">Rachat Standard / Vente État (50%)</option>
+                                <option value="sabotage">Sécurité Anti-Sabotage - Chute >50% (40%)</option>
+                                <option value="auction">Départ Enchères - Plus de 2 acheteurs (45%)</option>
+                            </select>
+                        </div>
+                        <div class="bg-gray-900/90 border border-emerald-500/30 rounded-xl p-3 flex items-center justify-between">
+                            <span class="text-xs text-gray-400">Prix officiel estimé :</span>
+                            <span id="buyout-result" class="text-xl font-extrabold text-emerald-400">500 000 $</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===================================================================== -->
+            <!-- CHAPITRE 4 : RÈGLES SPÉCIFIQUES PAR MÉTIER                            -->
+            <!-- ===================================================================== -->
+            <section id="chapitre-4" class="rule-section scroll-mt-24 space-y-6">
+                <div class="flex items-center gap-3 border-b border-gray-800 pb-4">
+                    <span class="w-10 h-10 rounded-xl bg-purple-500/15 border border-purple-500/30 text-purple-400 flex items-center justify-center font-bold text-lg">4</span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Règles Spécifiques par Métier</h2>
+                        <p class="text-sm text-gray-400">Sélectionnez un secteur pour consulter ses obligations et restrictions RP</p>
+                    </div>
+                </div>
+
+                <!-- Onglets de sélection des métiers -->
+                <div class="flex flex-wrap gap-2" id="job-tabs">
+                    <button data-job="police" class="job-tab-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-blue-600 text-white transition">
+                        <i class="fa-solid fa-shield-halved mr-1.5"></i>LSPD & BCSO
+                    </button>
+                    <button data-job="ss" class="job-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition">
+                        <i class="fa-solid fa-user-secret mr-1.5"></i>Secret Service
+                    </button>
+                    <button data-job="doj" class="job-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition">
+                        <i class="fa-solid fa-scale-balanced mr-1.5"></i>DOJ & Avocats
+                    </button>
+                    <button data-job="sams" class="job-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition">
+                        <i class="fa-solid fa-truck-medical mr-1.5"></i>SAMS
+                    </button>
+                    <button data-job="garage" class="job-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition">
+                        <i class="fa-solid fa-wrench mr-1.5"></i>Garages
+                    </button>
+                    <button data-job="nightlife" class="job-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition">
+                        <i class="fa-solid fa-martini-glass-citrus mr-1.5"></i>Resto & Boîtes
+                    </button>
+                    <button data-job="farm" class="job-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition">
+                        <i class="fa-solid fa-truck-ramp-box mr-1.5"></i>Entreprises Run
+                    </button>
+                    <button data-job="indep" class="job-tab-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-gray-800 text-gray-300 hover:bg-gray-700 transition">
+                        <i class="fa-solid fa-newspaper mr-1.5"></i>Weazel & Dynasty 8
+                    </button>
+                </div>
+
+                <!-- Contenu dynamique des onglets métiers -->
+                <div id="job-content-container" class="bg-rp-card border border-gray-800 rounded-2xl p-6">
+                    <!-- Rempli par JS -->
+                </div>
+            </section>
+
+            <!-- ===================================================================== -->
+            <!-- CHAPITRE 5 : DÉONTOLOGIE, ABSENCES & SANCTIONS                        -->
+            <!-- ===================================================================== -->
+            <section id="chapitre-5" class="rule-section scroll-mt-24 space-y-6">
+                <div class="flex items-center gap-3 border-b border-gray-800 pb-4">
+                    <span class="w-10 h-10 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-400 flex items-center justify-center font-bold text-lg">5</span>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white">Déontologie, Absences & Sanctions</h2>
+                        <p class="text-sm text-gray-400">Corruption, blanchiment, gestion des absences et échelle des sanctions</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Corruption & Blanchiment -->
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-6 space-y-4">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-mask text-rose-400"></i> Corruption & Blanchiment
+                        </h3>
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-xmark text-rose-400 mt-1"></i>
+                                <span><strong>Corruption interdite par défaut</strong> dans tous les services publics. Un dossier "ripou" validé par le Staff est obligatoire (vente d'armes de service et vol de saisies strictement interdits).</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-xmark text-rose-400 mt-1"></i>
+                                <span><strong>Blanchiment interdit</strong> sans dossier de couverture validé par les pôles Légal & Illégal. Sanction : saisie immédiate de l'entreprise et bannissement.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-xmark text-rose-400 mt-1"></i>
+                                <span><strong>Vidage de coffre :</strong> Interdiction absolue de vider les comptes ou coffres d'entreprise avant une cession ou un départ.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Absences & Échelle des Sanctions -->
+                    <div class="bg-rp-card border border-gray-800 rounded-2xl p-6 space-y-4">
+                        <h3 class="font-bold text-white text-base flex items-center gap-2">
+                            <i class="fa-solid fa-clock text-amber-400"></i> Absences & Échelle des Sanctions
+                        </h3>
+                        <ul class="space-y-3 text-sm text-gray-300">
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-calendar-check text-blue-400 mt-1"></i>
+                                <span><strong>Absence 5 jours et + :</strong> Signalement obligatoire sur Discord avec désignation d'un co-patron intérimaire.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-triangle-exclamation text-amber-400 mt-1"></i>
+                                <span><strong>Abandon (7 jours) :</strong> Sans activité ni justification pendant 7 jours consécutifs, l'entreprise est retirée sans indemnité et remise en vente.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <i class="fa-solid fa-gavel text-rose-400 mt-1"></i>
+                                <span><strong>3 Warns Entreprise = Retrait immédiat.</strong> Les fraudes fiscales ou sabotages entraînent un remboursement forcé et un ban.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- Footer -->
+        <footer class="border-t border-gray-800/80 py-8 px-4 text-center text-xs text-gray-500">
+            <p>Portail Officiel du Pôle Légal • Économie Semi-Réaliste GTA RP (FiveM)</p>
+            <p class="mt-1">Toute tentative de contournement économique ou de sabotage financier entraîne des sanctions administratives.</p>
+        </footer>
+    </main>
+
+    <script>
+        // =========================================================================
+        // 1. SYSTÈME DE NOTIFICATIONS TOAST (Remplace alert())
+        // =========================================================================
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'bg-emerald-900/95 border-emerald-500 text-emerald-100',
+                error: 'bg-rose-900/95 border-rose-500 text-rose-100',
+                info: 'bg-blue-900/95 border-blue-500 text-blue-100'
+            };
+            const icons = {
+                success: 'fa-circle-check text-emerald-400',
+                error: 'fa-circle-exclamation text-rose-400',
+                info: 'fa-circle-info text-blue-400'
+            };
+
+            toast.className = `pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl border shadow-2xl text-sm font-medium transition-all duration-300 transform translate-y-2 opacity-0 ${colors[type]}`;
+            toast.innerHTML = `<i class="fa-solid ${icons[type]} text-base"></i><span>${message}</span>`;
+            container.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('translate-y-2', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        }
+
+        // =========================================================================
+        // 2. NAVIGATION MOBILE & PROGRESSION DE LECTURE
+        // =========================================================================
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        mobileBtn.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', toggleSidebar);
+
+        document.querySelectorAll('.nav-item').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024) toggleSidebar();
+            });
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const percent = docHeight > 0 ? Math.min(100, Math.round((scrollTop / docHeight) * 100)) : 0;
+
+            document.getElementById('reading-progress').style.width = percent + '%';
+            document.getElementById('sidebar-progress-bar').style.width = percent + '%';
+            document.getElementById('sidebar-progress-text').textContent = percent + '%';
+        });
+
+        // =========================================================================
+        // 3. SIMULATEUR DE TAXES HEBDOMADAIRES
+        // =========================================================================
+        const taxSector = document.getElementById('tax-sector');
+        const taxAmount = document.getElementById('tax-amount');
+
+        function calculateTax() {
+            const sector = taxSector.value;
+            const amount = Math.max(0, parseFloat(taxAmount.value) || 0);
+            let rate = 0;
+
+            if (sector === 'garage') {
+                if (amount <= 1000000) rate = 10;
+                else if (amount <= 2000000) rate = 20;
+                else if (amount <= 2500000) rate = 25;
+                else rate = 30;
+            } else if (sector === 'resto') {
+                if (amount <= 1000000) rate = 6;
+                else if (amount <= 2000000) rate = 13;
+                else if (amount <= 2500000) rate = 21;
+                else rate = 27;
+            } else if (sector === 'farm') {
+                if (amount <= 1000000) rate = 15;
+                else if (amount <= 2000000) rate = 28;
+                else if (amount <= 2500000) rate = 36;
+                else if (amount <= 3200000) rate = 45;
+                else rate = 55;
+            }
+
+            const taxValue = Math.round(amount * (rate / 100));
+            const netValue = amount - taxValue;
+
+            document.getElementById('tax-rate-display').textContent = rate + ' %';
+            document.getElementById('tax-result-display').textContent = taxValue.toLocaleString('fr-FR') + ' $';
+            document.getElementById('tax-net-display').textContent = netValue.toLocaleString('fr-FR') + ' $';
+        }
+
+        taxSector.addEventListener('change', calculateTax);
+        taxAmount.addEventListener('input', calculateTax);
+        calculateTax();
+
+        // =========================================================================
+        // 4. CALCULATEUR DE RACHAT D'ENTREPRISE
+        // =========================================================================
+        const buyoutBalance = document.getElementById('buyout-balance');
+        const buyoutScenario = document.getElementById('buyout-scenario');
+
+        function calculateBuyout() {
+            const bal = Math.max(0, parseFloat(buyoutBalance.value) || 0);
+            const scen = buyoutScenario.value;
+            let pct = 0.50;
+            if (scen === 'sabotage') pct = 0.40;
+            if (scen === 'auction') pct = 0.45;
+
+            const result = Math.round(bal * pct);
+            document.getElementById('buyout-result').textContent = result.toLocaleString('fr-FR') + ' $';
+        }
+
+        buyoutBalance.addEventListener('input', calculateBuyout);
+        buyoutScenario.addEventListener('change', calculateBuyout);
+        calculateBuyout();
+
+        // =========================================================================
+        // 5. ONGLETS DYNAMIQUES DES RÈGLES PAR MÉTIER
+        // =========================================================================
+        const jobsData = {
+            police: {
+                title: "Forces de l'Ordre (LSPD & BCSO)",
+                badge: "Effectif min : 6 • Budget : 45k$ - 250k$",
+                color: "blue",
+                rules: [
+                    "Respect strict de la hiérarchie, de la lecture des droits Miranda et de l'échelle de riposte graduée.",
+                    "La LSPD gère la zone urbaine (Los Santos) et le BCSO la zone Nord (Blaine County). Renforts mutuels autorisés sur demande radio.",
+                    "Toutes les saisies (armes, drogues, argent sale) doivent être déposées dans les coffres de saisie officiels. Tout vol entraîne un bannissement.",
+                    "Lors d'une prise d'otage, la vie des otages prime sur l'arrestation : la négociation est obligatoire avant tout assaut."
+                ]
+            },
+            ss: {
+                title: "Secret Service (Protection Rapprochée & État)",
+                badge: "Effectif min : 6 • Budget : 60k$ - 225k$",
+                color: "purple",
+                rules: [
+                    "Mission principale : protection rapprochée du Gouverneur, des membres du Gouvernement, des juges du DOJ et sécurisation des bâtiments officiels.",
+                    "Le Secret Service n'effectue pas de patrouilles de police classiques ni de contrôles routiers ordinaires, sauf menace directe sur une personnalité protégée.",
+                    "Port d'équipement encadré uniquement lors des escortes officielles et alertes gouvernementales."
+                ]
+            },
+            doj: {
+                title: "Département de la Justice (DOJ) & Avocats",
+                badge: "DOJ : 2 min (100k$-200k$) • Avocats : 2 min",
+                color: "amber",
+                rules: [
+                    "Impartialité totale des magistrats : les jugements se basent uniquement sur les preuves recevables (rapports, témoignages, vidéos).",
+                    "Tout citoyen en garde à vue a droit à un avocat. Si aucun avocat ne se présente sous 15 minutes, la procédure suit son cours.",
+                    "Secret professionnel absolu entre un avocat et son client. Toute violation entraîne une radiation."
+                ]
+            },
+            sams: {
+                title: "Services Médicaux d'Urgence (SAMS)",
+                badge: "Effectif min : 6 • Budget : 45k$ - 250k$",
+                color: "emerald",
+                rules: [
+                    "Neutralité médicale absolue : obligation de soigner chaque citoyen sans discrimination (civils, policiers, criminels).",
+                    "Secret médical : interdiction de dénoncer un patient blessé par balle aux forces de l'ordre (sauf menace armée dans l'hôpital).",
+                    "Obligation de jouer un RP médical cohérent (diagnostic, transport à l'hôpital pour blessures graves)."
+                ]
+            },
+            garage: {
+                title: "Garages & Mécanique",
+                badge: "Effectif min : 3 • Taxes : 10% à 30%",
+                color: "blue",
+                rules: [
+                    "Respect obligatoire des grilles tarifaires fixées par l'État pour les réparations et customisations.",
+                    "Interdiction stricte de réparer ou customiser gratuitement des véhicules pour ses proches, sa famille ou un groupe illégal.",
+                    "Les remorquages en fourrière doivent être justifiés par un stationnement gênant ou une réquisition des forces de l'ordre."
+                ]
+            },
+            nightlife: {
+                title: "Restauration & Boîtes de Nuit",
+                badge: "Effectif min : 5 • Taxes : 6% à 27%",
+                color: "purple",
+                rules: [
+                    "Privilégier le dialogue et l'interaction RP lors de la vente (interdiction du farm de vente à la chaîne sans parler).",
+                    "Les boîtes de nuit doivent organiser au minimum 1 événement public par semaine annoncé via Weazel News.",
+                    "Les agents de sécurité/videurs privés n'ont pas le droit de porter d'armes à feu (matraque ou lampe torche uniquement)."
+                ]
+            },
+            farm: {
+                title: "Entreprises de Run (Farm)",
+                badge: "Effectif min : 2 • Taxes : 15% à 55%",
+                color: "amber",
+                rules: [
+                    "Utilisation exclusive des véhicules de fonction homologués fournis par l'entreprise lors des trajets de récolte/traitement/vente.",
+                    "Respect du Fear RP en cas de braquage de convoi par un groupe illégal. Le port d'arme lourde est strictement interdit aux employés en service."
+                ]
+            },
+            indep: {
+                title: "Entreprises Indépendantes (Weazel News & Dynasty 8)",
+                badge: "Weazel : 4 min • Dynasty 8 : 3 min",
+                color: "cyan",
+                rules: [
+                    "Weazel News : Port d'une tenue/badge presse obligatoire en reportage. Respect du Fear RP lors des fusillades (rester hors du périmètre d'intervention).",
+                    "Dynasty 8 : Toute vente ou location immobilière exige une visite physique RP avec le client et la rédaction d'un acte officiel.",
+                    "Interdiction de vendre des biens situés dans des zones de QG illégaux sans validation du Staff."
+                ]
+            }
+        };
+
+        const jobContainer = document.getElementById('job-content-container');
+        const jobButtons = document.querySelectorAll('.job-tab-btn');
+
+        function renderJob(jobKey) {
+            const data = jobsData[jobKey];
+            jobContainer.innerHTML = `
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 mb-4 border-b border-gray-800">
+                    <h3 class="text-xl font-bold text-white">${data.title}</h3>
+                    <span class="px-3 py-1 rounded-full bg-gray-800 border border-gray-700 text-xs font-semibold text-amber-400">${data.badge}</span>
+                </div>
+                <ul class="space-y-3">
+                    ${data.rules.map(rule => `
+                        <li class="flex items-start gap-3 text-sm text-gray-300 leading-relaxed">
+                            <span class="w-5 h-5 rounded-full bg-amber-500/15 text-amber-400 flex items-center justify-center shrink-0 mt-0.5 text-xs">
+                                <i class="fa-solid fa-check"></i>
+                            </span>
+                            <span>${rule}</span>
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+        }
+
+        jobButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                jobButtons.forEach(b => {
+                    b.classList.remove('bg-blue-600', 'text-white');
+                    b.classList.add('bg-gray-800', 'text-gray-300');
+                });
+                btn.classList.remove('bg-gray-800', 'text-gray-300');
+                btn.classList.add('bg-blue-600', 'text-white');
+                renderJob(btn.dataset.job);
+            });
+        });
+        renderJob('police');
+    </script>
+</body>
+</html>
